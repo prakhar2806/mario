@@ -6,7 +6,7 @@ class Square extends Component {
     render() {
 
         return (
-            <img src="https://www.publicdomainpictures.net/pictures/30000/nahled/plain-white-background.jpg" id={this.props.value} className="square" />
+            <img src="https://www.publicdomainpictures.net/pictures/30000/nahled/plain-white-background.jpg" id={this.props.value} className="square" alt="mario" />
         )
     }
 }
@@ -30,12 +30,16 @@ class Grid extends Component {
     componentDidMount() {
         document.addEventListener("click", this._handleDocumentClick, false);
         document.addEventListener("keydown", this._handleKeyDown);
-        let rowIndex = 3;
+
+        let rows = this.props.row;
+        let column = this.props.column;
+        let totalBlocks = rows * column - 1;
+        let rowIndex = rows;
         let MushroomIndex = [];
 
         for (let i = 0; i < rowIndex; i++) {
             //let val = Math.floor(Math.random() * Math.floor(10));
-            let val = Math.floor(Math.random() * 8) + 2;
+            let val = Math.floor(Math.random() * totalBlocks) + 2;
             let ispresent = false;
             MushroomIndex.forEach(ele => {
                 if (ele === val) {
@@ -73,9 +77,10 @@ class Grid extends Component {
     leftArrowClicked() {
         let currentIndex = this.state.currentIndex;//1
         let leftBordervalues = [];//1,4,7
-        let n = 3;
-        for (let i = 0; i < n; i++) {
-            let num = n * i + 1;
+        let row = parseInt(this.props.row, 10);
+        let col = parseInt(this.props.column, 10);
+        for (let i = 0; i < row; i++) {
+            let num = col * i + 1;
             leftBordervalues.push(num);
         }
 
@@ -87,7 +92,7 @@ class Grid extends Component {
         })
 
         if (marioAtBorder) {
-            this.setState({ currentIndex: currentIndex + (n - 1) }); //n-1
+            this.setState({ currentIndex: currentIndex + (col - 1) }); 
         } else {
             this.setState({ currentIndex: currentIndex - 1 });
         }
@@ -98,9 +103,10 @@ class Grid extends Component {
     rightArrowClicked() {
         let currentIndex = this.state.currentIndex;//1
         let rightBordervalues = [];//3,6,9
-        let n = 3;
-        for (let i = 1; i <= n; i++) {
-            let num = n * i;
+        let row = parseInt(this.props.row, 10);
+        let col = parseInt(this.props.column, 10);
+        for (let i = 1; i <= row; i++) {
+            let num =  col* i;
             rightBordervalues.push(num);
         }
 
@@ -112,7 +118,7 @@ class Grid extends Component {
         })
 
         if (marioAtBorder) {
-            this.setState({ currentIndex: currentIndex - (n - 1) }); //n-1
+            this.setState({ currentIndex: currentIndex - (col - 1) }); 
         } else {
             this.setState({ currentIndex: currentIndex + 1 });
         }
@@ -123,8 +129,9 @@ class Grid extends Component {
     upArrowClicked() {
         let currentIndex = this.state.currentIndex;//1
         let upBordervalues = [];//1,2,3
-        let n = 3;
-        for (let i = 1; i <= n; i++) {
+        let row = parseInt(this.props.row, 10);
+        let col = parseInt(this.props.column, 10);
+        for (let i = 1; i <= col; i++) {
             let num = i;
             upBordervalues.push(num);
         }
@@ -137,9 +144,9 @@ class Grid extends Component {
         })
 
         if (marioAtBorder) {
-            this.setState({ currentIndex: currentIndex + n * (n - 1) }); //n*n-1
+            this.setState({ currentIndex: currentIndex + col * (row - 1) }); 
         } else {
-            this.setState({ currentIndex: currentIndex - n }); //n
+            this.setState({ currentIndex: currentIndex - col }); 
         }
 
         this.moveMario(currentIndex);
@@ -148,9 +155,10 @@ class Grid extends Component {
     downArrowClicked() {
         let currentIndex = this.state.currentIndex;//1
         let downBordervalues = [];//7,8,9
-        let n = 3;
-        for (let i = 1; i <= n; i++) {  //n
-            let num = n * (n - 1) + i;
+        let row = parseInt(this.props.row, 10);
+        let col = parseInt(this.props.column, 10);
+        for (let i = 1; i <= col; i++) {  
+            let num = col * (row - 1) + i;
             downBordervalues.push(num);
         }
 
@@ -162,9 +170,9 @@ class Grid extends Component {
         })
 
         if (marioAtBorder) {
-            this.setState({ currentIndex: currentIndex - n * (n - 1) }); //n*n-1
+            this.setState({ currentIndex: currentIndex - col * (row - 1) }); 
         } else {
-            this.setState({ currentIndex: currentIndex + n }); //n
+            this.setState({ currentIndex: currentIndex + col }); 
         }
         console.log("down", this.state.currentIndex);
         this.moveMario(currentIndex);
@@ -179,7 +187,7 @@ class Grid extends Component {
     cookiesEaten() {
         if (this.state.mushroomIndexes.length > 0) {
             this.state.mushroomIndexes.forEach((ele, index) => {
-                if (ele == this.state.currentIndex) {
+                if (ele === this.state.currentIndex) {
                     this.state.mushroomIndexes.splice(index, 1);
                 }
                 if (this.state.mushroomIndexes.length === 0) {
@@ -197,29 +205,33 @@ class Grid extends Component {
         );
     }
 
+    createTable() {
+        let rows = this.props.row;
+        let column = this.props.column;
+        let table = []
+        let k = 1;
+        // Outer loop to create parent
+        for (let i = 0; i < rows; i++) {
+            let children = []
+            //Inner loop to create children
+            for (let j = 1; j <= column; j++) {
+                k = column * i + j;
+                children.push(<td key={k}>{this.renderSquare(k)}</td>)
+            }
+            //Create the parent and add the children
+            table.push(<tr key={i}>{children}</tr>)
+        }
+        return table
+    }
+
     render() {
-        const status = 'Next player: X';
 
         return (
-            <div>
-                <div className="status">{status}</div>
-                <div className="board-row">
-                    {this.renderSquare(1)}
-                    {this.renderSquare(2)}
-                    {this.renderSquare(3)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(4)}
-                    {this.renderSquare(5)}
-                    {this.renderSquare(6)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(7)}
-                    {this.renderSquare(8)}
-                    {this.renderSquare(9)}
-
-                </div>
-            </div>
+            <table>
+                <tbody>
+                    {this.createTable()}
+                </tbody>
+            </table>
         );
     }
 }
