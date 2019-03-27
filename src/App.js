@@ -22,13 +22,26 @@ class App extends Component {
   }
 
   render() {
+    const inputstyle = {
+      width: '40%',
+    }
+    const btnStyle = {
+      width: '200px',
+      float: 'left'
+    }
+
+    
+
     return (
       <div className="App">
-        <input type="text" id="row" />
-        <input type="text" id="column" />
-        <button onClick={this.handleSubmit}>submit</button>
+        <input type="text" id="row" placeholder="Enter number of Rows" className="form-control form-control-lg" style={inputstyle} />
+        <br />
+        <input type="text" id="column" placeholder="Enter number of Columns" className="form-control form-control-lg" style={inputstyle} />
+        <br />
+        <button onClick={this.handleSubmit} className="btn btn-primary" style={btnStyle}>submit</button>
+        <br />
         {this.state.row != null ?
-          <Grid row={this.state.row} column={this.state.column}></Grid>
+          <Grid row={this.state.row} column={this.state.column} ></Grid>
           : ""}
       </div>
     );

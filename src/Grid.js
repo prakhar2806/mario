@@ -92,7 +92,7 @@ class Grid extends Component {
         })
 
         if (marioAtBorder) {
-            this.setState({ currentIndex: currentIndex + (col - 1) }); 
+            this.setState({ currentIndex: currentIndex + (col - 1) });
         } else {
             this.setState({ currentIndex: currentIndex - 1 });
         }
@@ -106,7 +106,7 @@ class Grid extends Component {
         let row = parseInt(this.props.row, 10);
         let col = parseInt(this.props.column, 10);
         for (let i = 1; i <= row; i++) {
-            let num =  col* i;
+            let num = col * i;
             rightBordervalues.push(num);
         }
 
@@ -118,7 +118,7 @@ class Grid extends Component {
         })
 
         if (marioAtBorder) {
-            this.setState({ currentIndex: currentIndex - (col - 1) }); 
+            this.setState({ currentIndex: currentIndex - (col - 1) });
         } else {
             this.setState({ currentIndex: currentIndex + 1 });
         }
@@ -144,9 +144,9 @@ class Grid extends Component {
         })
 
         if (marioAtBorder) {
-            this.setState({ currentIndex: currentIndex + col * (row - 1) }); 
+            this.setState({ currentIndex: currentIndex + col * (row - 1) });
         } else {
-            this.setState({ currentIndex: currentIndex - col }); 
+            this.setState({ currentIndex: currentIndex - col });
         }
 
         this.moveMario(currentIndex);
@@ -157,7 +157,7 @@ class Grid extends Component {
         let downBordervalues = [];//7,8,9
         let row = parseInt(this.props.row, 10);
         let col = parseInt(this.props.column, 10);
-        for (let i = 1; i <= col; i++) {  
+        for (let i = 1; i <= col; i++) {
             let num = col * (row - 1) + i;
             downBordervalues.push(num);
         }
@@ -170,9 +170,9 @@ class Grid extends Component {
         })
 
         if (marioAtBorder) {
-            this.setState({ currentIndex: currentIndex - col * (row - 1) }); 
+            this.setState({ currentIndex: currentIndex - col * (row - 1) });
         } else {
-            this.setState({ currentIndex: currentIndex + col }); 
+            this.setState({ currentIndex: currentIndex + col });
         }
         console.log("down", this.state.currentIndex);
         this.moveMario(currentIndex);
