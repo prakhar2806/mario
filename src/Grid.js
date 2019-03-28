@@ -15,7 +15,8 @@ class Grid extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentIndex: 1
+            currentIndex: 1,
+            stepsTaken: 0
         }
 
         this.leftArrowClicked = this.leftArrowClicked.bind(this);
@@ -182,10 +183,12 @@ class Grid extends Component {
         document.getElementById(this.state.currentIndex).src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLC6pSNjX1QHk6gW8UdArnBoYiCtdaiOSnI2biQ_an7CxzpzDI";
         document.getElementById(currentIndex).src = "https://www.publicdomainpictures.net/pictures/30000/nahled/plain-white-background.jpg";
         this.cookiesEaten();
+
     }
 
     cookiesEaten() {
         if (this.state.mushroomIndexes.length > 0) {
+            this.setState({ stepsTaken: this.state.stepsTaken + 1 });
             this.state.mushroomIndexes.forEach((ele, index) => {
                 if (ele === this.state.currentIndex) {
                     this.state.mushroomIndexes.splice(index, 1);
@@ -227,11 +230,14 @@ class Grid extends Component {
     render() {
 
         return (
-            <table>
-                <tbody>
-                    {this.createTable()}
-                </tbody>
-            </table>
+            <div>
+                <table>
+                    <tbody>
+                        {this.createTable()}
+                    </tbody>
+                </table>
+                <h1>Steps taken By Mario = {this.state.stepsTaken}</h1>
+            </div>
         );
     }
 }

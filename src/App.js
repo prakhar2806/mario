@@ -8,18 +8,27 @@ class App extends Component {
 
     this.state = {
       row: null,
-      column: null
+      column: null,
+      showChild: false
     }
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.reRenderGrid = this.reRenderGrid.bind(this);
   }
   handleSubmit() {
     let rowCount = document.getElementById("row").value;
     let columnCount = document.getElementById("column").value;
     this.setState({
       row: rowCount,
-      column: columnCount
+      column: columnCount,
     })
+    this.setState({ showChild: true });
   }
+
+  reRenderGrid() {
+    this.setState({ rows: 0, column: 0 });
+    this.setState({ showChild: false });
+  }
+
 
   render() {
     const inputstyle = {
@@ -30,19 +39,17 @@ class App extends Component {
       float: 'left'
     }
 
-    
+    const childElement = this.state.showChild ? <Grid row={this.state.row} column={this.state.column} /> : null;
 
     return (
       <div className="App">
-        <input type="text" id="row" placeholder="Enter number of Rows" className="form-control form-control-lg" style={inputstyle} />
+        <input type="text" id="row" placeholder="Enter number of Rows" className="form-control form-control-lg" onChange={this.reRenderGrid} style={inputstyle} />
         <br />
-        <input type="text" id="column" placeholder="Enter number of Columns" className="form-control form-control-lg" style={inputstyle} />
+        <input type="text" id="column" placeholder="Enter number of Columns" className="form-control form-control-lg" onChange={this.reRenderGrid} style={inputstyle} />
         <br />
         <button onClick={this.handleSubmit} className="btn btn-primary" style={btnStyle}>submit</button>
         <br />
-        {this.state.row != null ?
-          <Grid row={this.state.row} column={this.state.column} ></Grid>
-          : ""}
+        {childElement}
       </div>
     );
   }
