@@ -17,7 +17,8 @@ class Grid extends Component {
         this.state = {
             currentIndex: 1,
             stepsTaken: 0,
-            mushroomIndexes: []
+            mushroomIndexes: [],
+            MushroomFoundIndex: []
         }
 
         this.leftArrowClicked = this.leftArrowClicked.bind(this);
@@ -50,7 +51,7 @@ class Grid extends Component {
                 }
             })
             if (!ispresent) {
-                // console.log("val", val);
+                console.log("val", val);
                 MushroomIndex.push(val);
                 // document.getElementById(val).src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSifnttt2HHkRPDibiRQWT6W9YY7zWiYnYlK9f9TdbcJaDWcdn_"
             }
@@ -181,29 +182,37 @@ class Grid extends Component {
     }
 
     moveMario(currentIndex) {
-        document.getElementById(this.state.currentIndex).src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLC6pSNjX1QHk6gW8UdArnBoYiCtdaiOSnI2biQ_an7CxzpzDI";
-        document.getElementById(currentIndex).src = "https://www.publicdomainpictures.net/pictures/30000/nahled/plain-white-background.jpg";
         this.cookiesEaten();
 
+        if (this.state.MushroomFoundIndex.includes(this.state.currentIndex)) {
+            if (!this.state.MushroomFoundIndex.includes(currentIndex)) {
+                document.getElementById(currentIndex).src = "https://www.publicdomainpictures.net/pictures/30000/nahled/plain-white-background.jpg";
+            }
+            // document.getElementById(this.state.currentIndex).src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLC6pSNjX1QHk6gW8UdArnBoYiCtdaiOSnI2biQ_an7CxzpzDI";
+
+        } else {
+            document.getElementById(this.state.currentIndex).src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLC6pSNjX1QHk6gW8UdArnBoYiCtdaiOSnI2biQ_an7CxzpzDI";
+            if (!this.state.MushroomFoundIndex.includes(currentIndex)) {
+                document.getElementById(currentIndex).src = "https://www.publicdomainpictures.net/pictures/30000/nahled/plain-white-background.jpg";
+            }
+        }
     }
 
     cookiesEaten() {
         if (this.state.mushroomIndexes.length > 0) {
             this.setState({ stepsTaken: this.state.stepsTaken + 1 });
+            let currentIndex = this.state.currentIndex;
             this.state.mushroomIndexes.forEach((ele, index) => {
-                if (ele === this.state.currentIndex) {
+                if (ele === currentIndex) {
                     let Arr = [...this.state.mushroomIndexes];
                     Arr.splice(index, 1);
                     this.setState({ mushroomIndexes: Arr });
                     document.getElementById(ele).src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSifnttt2HHkRPDibiRQWT6W9YY7zWiYnYlK9f9TdbcJaDWcdn_"
-                }
-                if (this.state.mushroomIndexes.length === 0) {
-                    alert("Mario is FULL. No more mushrooms to eat !! ");
+                    this.state.MushroomFoundIndex.push(ele);
+                    console.log("this.state.MushroomFoundIndex", this.state.MushroomFoundIndex);
                 }
             })
         }
-
-        // console.log("this.state.mushroomIndexes", this.state.mushroomIndexes);
     }
 
     renderSquare(i) {
@@ -232,16 +241,26 @@ class Grid extends Component {
     }
 
     render() {
+        const tableStyle = {
+            textAlign: 'center',
+            margin: 'auto'
+        }
 
         return (
             <div>
-                <table>
-                    <tbody>
-                        {this.createTable()}
-                    </tbody>
-                </table>
-                <h1>Steps taken By Mario = {this.state.stepsTaken}</h1>
-                <h1>Mushrooms left to eat = {this.state.mushroomIndexes.length}</h1>
+
+                {this.state.mushroomIndexes.length == 0
+                    ?
+                    <h3>Mario stomach Is full with {this.props.row} mushrooms !! <br />score: {this.state.stepsTaken} steps taken</h3>
+                    :
+                    <h1>Steps taken By Mario = {this.state.stepsTaken}<br /> Mushrooms left to eat={this.state.mushroomIndexes.length}</h1>}
+                <div>
+                    <table style={tableStyle}>
+                        <tbody>
+                            {this.createTable()}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         );
     }
