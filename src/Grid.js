@@ -16,7 +16,8 @@ class Grid extends Component {
         super(props);
         this.state = {
             currentIndex: 1,
-            stepsTaken: 0
+            stepsTaken: 0,
+            mushroomIndexes: []
         }
 
         this.leftArrowClicked = this.leftArrowClicked.bind(this);
@@ -51,7 +52,7 @@ class Grid extends Component {
             if (!ispresent) {
                 // console.log("val", val);
                 MushroomIndex.push(val);
-                document.getElementById(val).src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSifnttt2HHkRPDibiRQWT6W9YY7zWiYnYlK9f9TdbcJaDWcdn_"
+                // document.getElementById(val).src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSifnttt2HHkRPDibiRQWT6W9YY7zWiYnYlK9f9TdbcJaDWcdn_"
             }
         }
 
@@ -191,7 +192,10 @@ class Grid extends Component {
             this.setState({ stepsTaken: this.state.stepsTaken + 1 });
             this.state.mushroomIndexes.forEach((ele, index) => {
                 if (ele === this.state.currentIndex) {
-                    this.state.mushroomIndexes.splice(index, 1);
+                    let Arr = [...this.state.mushroomIndexes];
+                    Arr.splice(index, 1);
+                    this.setState({ mushroomIndexes: Arr });
+                    document.getElementById(ele).src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSifnttt2HHkRPDibiRQWT6W9YY7zWiYnYlK9f9TdbcJaDWcdn_"
                 }
                 if (this.state.mushroomIndexes.length === 0) {
                     alert("Mario is FULL. No more mushrooms to eat !! ");
@@ -237,6 +241,7 @@ class Grid extends Component {
                     </tbody>
                 </table>
                 <h1>Steps taken By Mario = {this.state.stepsTaken}</h1>
+                <h1>Mushrooms left to eat = {this.state.mushroomIndexes.length}</h1>
             </div>
         );
     }
